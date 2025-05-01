@@ -1,3 +1,4 @@
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
@@ -50,25 +51,32 @@ class _ExpensesState extends State<Expenses> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Expense Tracker"),
-        actions: [
-          IconButton(
-            onPressed: _openAddExpenseOverlay,
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Text("Chart"),
-          Expanded(
-            child: ExpensesList(
-                expenses: _registeredExpenses, onRemoveExpense: _removeExpense),
-          ),
-        ],
-      ),
+    Widget mainContent = const Center(
+      child: Text('No expenses found. Click + to add!'),
     );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Expense Tracker"),
+          actions: [
+            IconButton(
+              onPressed: _openAddExpenseOverlay,
+              icon: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Chart(expenses: _registeredExpenses),
+            Expanded(child: mainContent),
+          ],
+        ));
   }
 }
